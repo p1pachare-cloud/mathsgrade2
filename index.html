@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NumberOrder Quest — Intellia SG</title>
+  <!-- SEO & Meta Tags -->
+  <meta name="description"
+    content="An interactive Singapore MOE syllabus-aligned ordering numbers game for Primary 1. Master numbers up to 200 with Zara the Explorer!">
+
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fredoka:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome Icons for Child-Friendly UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Background Music Control & Connection Indicator -->
+  <div class="top-nav-controls">
+    <div class="api-status" id="apiStatus">
+      <span class="status-dot"></span>
+      <span class="status-text">Connecting to Intellia API...</span>
+    </div>
+    <div class="sound-controls">
+      <button class="control-btn" id="musicToggle" title="Toggle Music">
+        <i class="fas fa-music"></i>
+      </button>
+      <button class="control-btn" id="sfxToggle" title="Toggle Sound Effects">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <button class="control-btn" id="ttsToggle" title="Toggle Speech Narration">
+        <i class="fas fa-comment-dots"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Game Canvas / Wrapper -->
+  <main class="game-container" id="gameContainer">
+
+    <!-- 1. LANDING SCREEN -->
+    <section class="screen active" id="screenLanding">
+      <!-- Background floating numbers for reference design look -->
+      <div class="bg-floating-number" style="top: 10%; left: 8%; font-size: 5rem;">74</div>
+      <div class="bg-floating-number" style="top: 12%; left: 18%; font-size: 4rem;">54</div>
+      <div class="bg-floating-number" style="top: 15%; left: 30%; font-size: 3.5rem;">53</div>
+      <div class="bg-floating-number" style="top: 10%; right: 35%; font-size: 5rem;">787</div>
+      <div class="bg-floating-number" style="top: 14%; right: 28%; font-size: 3rem;">50</div>
+      <div class="bg-floating-number" style="top: 11%; right: 18%; font-size: 4.5rem;">4610</div>
+      <div class="bg-floating-number" style="top: 13%; right: 7%; font-size: 4rem;">953</div>
+
+      <div class="landing-header-pill">
+        <span class="pill-tag"><i class="fas fa-star yellow-text"></i> - Grade 1 Maths</span>
+      </div>
+
+      <div class="landing-hero">
+        <div class="logo-box">
+          <h1><span class="highlight-orange">NumberOrder</span> <span class="white-text">Quest</span></h1>
+          <p class="subtitle-desc">Lesson 1.5 • Ordering numbers up to 200</p>
+        </div>
+
+        <!-- Robot Zara & speech bubble -->
+        <div class="robot-speech-panel">
+          <div class="character-container floating">
+            <div class="zara-avatar intro-avatar"></div>
+          </div>
+          <div class="speech-bubble-intro">
+            <div class="speech-bubble-text">Hi! I'm Zara! Let's go on a number adventure! 🌟🔢</div>
+          </div>
+        </div>
+
+        <!-- Short Description text -->
+        <p class="intro-description-text">
+          Learn to use <span class="yellow-highlight-text">number lines</span> to arrange numbers, find the missing
+          part, and solve ordering challenges!
+        </p>
+
+        <!-- YOUR LEARNING JOURNEY panel -->
+        <div class="learning-journey-card">
+          <div class="journey-title-tag">YOUR LEARNING JOURNEY</div>
+          <div class="journey-flow">
+            <div class="journey-node">
+              <div class="node-icon-wrapper blue-icon-bg"><i class="fas fa-magnifying-glass"></i></div>
+              <div class="node-text">
+                <span class="node-name">Wonder</span>
+                <span class="node-sub">A number mystery!</span>
+              </div>
+            </div>
+            <i class="fas fa-arrow-right node-connector"></i>
+            <div class="journey-node">
+              <div class="node-icon-wrapper blue-icon-bg"><i class="fas fa-book-open"></i></div>
+              <div class="node-text">
+                <span class="node-name">Story</span>
+                <span class="node-sub">See order in action</span>
+              </div>
+            </div>
+            <i class="fas fa-arrow-right node-connector"></i>
+            <div class="journey-node">
+              <div class="node-icon-wrapper blue-icon-bg"><i class="fas fa-flask"></i></div>
+              <div class="node-text">
+                <span class="node-name">Simulate</span>
+                <span class="node-sub">Build number lines</span>
+              </div>
+            </div>
+            <i class="fas fa-arrow-right node-connector"></i>
+            <div class="journey-node">
+              <div class="node-icon-wrapper blue-icon-bg"><i class="fas fa-gamepad"></i></div>
+              <div class="node-text">
+                <span class="node-name">Play</span>
+                <span class="node-sub">Camified challenges</span>
+              </div>
+            </div>
+            <i class="fas fa-arrow-right node-connector"></i>
+            <div class="journey-node">
+              <div class="node-icon-wrapper blue-icon-bg"><i class="fas fa-book-bookmark"></i></div>
+              <div class="node-text">
+                <span class="node-name">Reflect</span>
+                <span class="node-sub">What did you learn?</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Name input card -->
+        <div class="student-name-input-card">
+          <label for="studentName"><i class="fas fa-user-astronaut"></i> Explorer's Name:</label>
+          <input type="text" id="studentName" placeholder="Alex" maxlength="20">
+        </div>
+
+        <div class="landing-buttons">
+          <button class="btn btn-primary btn-lg btn-begin-journey" id="btnStartGame">
+            🚀 Begin Your Journey!
+          </button>
+        </div>
+
+        <!-- Bottom Feature Grid -->
+        <div class="bottom-features-bar">
+          <div class="feature-bar-card">
+            <div class="feature-bar-icon-box pink-icon-bg"><i class="fas fa-bullseye"></i></div>
+            <span class="feature-bar-label">100 Challenges</span>
+          </div>
+          <div class="feature-bar-card">
+            <div class="feature-bar-icon-box blue-icon-bg"><i class="fas fa-list-ol"></i></div>
+            <span class="feature-bar-label">Number Lines</span>
+          </div>
+          <div class="feature-bar-card">
+            <div class="feature-bar-icon-box gold-icon-bg"><i class="fas fa-award"></i></div>
+            <span class="feature-bar-label">Badges & XP</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SCENE SELECTOR (LEARNING HUB) -->
+    <section class="screen" id="screenHub">
+      <div class="header-bar">
+        <button class="btn-back" id="btnBackToLanding"><i class="fas fa-arrow-left"></i> Home</button>
+        <h2>Zara's Journey Map</h2>
+        <div class="stats-bar">
+          <div class="stat-pill"><i class="fas fa-star yellow-text"></i> <span id="hubStars">0</span></div>
+          <button class="btn btn-secondary" id="btnSkipToPractice">Practice Engine <i class="fas fa-bolt"></i></button>
+        </div>
+      </div>
+
+      <p class="hub-instruction-text">Complete the 5 narrative scenes to unlock the full 100-Question Practice Engine!
+      </p>
+
+      <div class="scenes-grid">
+        <!-- Scene 1 Card -->
+        <div class="scene-card locked" id="cardScene1" data-scene="1">
+          <div class="scene-card-header bg-gradient-river">
+            <i class="fas fa-water scene-icon"></i>
+            <span class="scene-number">Scene 1</span>
+          </div>
+          <div class="scene-card-body">
+            <h3>River of Numbers</h3>
+            <p>Help Zara build a bridge! 🌉 Drag the number stones from smallest to biggest to cross the river!</p>
+            <div class="scene-status">
+              <span class="status-badge"><i class="fas fa-lock"></i> Locked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 2 Card -->
+        <div class="scene-card locked" id="cardScene2" data-scene="2">
+          <div class="scene-card-header bg-gradient-mountain">
+            <i class="fas fa-mountain scene-icon"></i>
+            <span class="scene-number">Scene 2</span>
+          </div>
+          <div class="scene-card-body">
+            <h3>Mountain Climb</h3>
+            <p>Zara needs to climb down safely! ⛰️ Put the numbers from biggest to smallest so she can reach the bottom!</p>
+            <div class="scene-status">
+              <span class="status-badge"><i class="fas fa-lock"></i> Locked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 3 Card -->
+        <div class="scene-card locked" id="cardScene3" data-scene="3">
+          <div class="scene-card-header bg-gradient-forest">
+            <i class="fas fa-road scene-icon"></i>
+            <span class="scene-number">Scene 3</span>
+          </div>
+          <div class="scene-card-body">
+            <h3>Missing Stepping Stone</h3>
+            <p>Oh no — a stepping stone is missing! 🔍 Can you find the mystery number to complete the path?</p>
+            <div class="scene-status">
+              <span class="status-badge"><i class="fas fa-lock"></i> Locked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 4 Card -->
+        <div class="scene-card locked" id="cardScene4" data-scene="4">
+          <div class="scene-card-header bg-gradient-cave">
+            <i class="fas fa-gem scene-icon"></i>
+            <span class="scene-number">Scene 4</span>
+          </div>
+          <div class="scene-card-body">
+            <h3>The 4-Gem Sort</h3>
+            <p>Sparkly gem treasures! 💎 Sort all 4 shiny gems in order — sometimes smallest first, sometimes biggest first!</p>
+            <div class="scene-status">
+              <span class="status-badge"><i class="fas fa-lock"></i> Locked</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene 5 Card -->
+        <div class="scene-card locked" id="cardScene5" data-scene="5">
+          <div class="scene-card-header bg-gradient-tower">
+            <i class="fas fa-building-columns scene-icon"></i>
+            <span class="scene-number">Scene 5</span>
+          </div>
+          <div class="scene-card-body">
+            <h3>The Hundred-Tower</h3>
+            <p>Big numbers time! 🏰 Use the colourful tower blocks to understand numbers from 100 all the way to 200!</p>
+            <div class="scene-status">
+              <span class="status-badge"><i class="fas fa-lock"></i> Locked</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SCENE PLAYER -->
+    <section class="screen" id="screenScenePlayer">
+      <div class="header-bar">
+        <button class="btn-back" id="btnExitScene"><i class="fas fa-sign-out-alt"></i> Exit Scene</button>
+        <h2 id="scenePlayerTitle">Scene Loading...</h2>
+        <div class="scene-progress">Scene Step <span id="sceneStepCurrent">1</span>/3</div>
+      </div>
+
+      <!-- Playback Area -->
+      <div class="scene-workspace">
+        <div class="character-guide-panel">
+          <div class="zara-bubble">
+            <p id="zaraSpeech">Hello, Explorer! I'm Zara — let's go on a number adventure together! 🌟</p>
+            <button class="btn-repeat-voice" id="btnRepeatVoice" title="Repeat Voice-over"><i
+                class="fas fa-volume-high"></i> Listen</button>
+          </div>
+          <div class="zara-container">
+            <div class="zara-avatar" id="zaraSceneAvatar"></div>
+          </div>
+        </div>
+
+        <!-- Dynamic Game Canvas where interactive parts render -->
+        <div class="interactive-stage" id="sceneStage">
+          <!-- Populated by JavaScript based on current scene -->
+        </div>
+      </div>
+
+      <!-- Scene Controls -->
+      <div class="scene-footer">
+        <div class="explanation-box" id="sceneExplanation">
+          <!-- Step explanation details -->
+        </div>
+        <button class="btn btn-primary" id="btnNextSceneStep" disabled>
+          Continue <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. PRACTICE ENGINE SCREEN -->
+    <section class="screen" id="screenPractice">
+      <div class="practice-header">
+        <div class="practice-header-left">
+          <button class="btn-icon-only" id="btnPausePractice" title="Pause Session"><i
+              class="fas fa-pause"></i></button>
+          <div class="streak-pill" id="streakPill">
+            <i class="fas fa-fire orange-text"></i> Streak: <span id="currentStreak">0</span>
+          </div>
+        </div>
+
+        <div class="practice-progress-center">
+          <span class="progress-label">Quest Challenge: <strong id="questionNumber">1</strong>/100</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="practiceProgressBar" style="width: 1%"></div>
+          </div>
+          <span class="level-indicator" id="difficultyLevel">Level 1 (1 - 99)</span>
+        </div>
+
+        <div class="practice-header-right">
+          <div class="stat-pill"><i class="fas fa-star yellow-text"></i> <span id="practiceStars">0</span></div>
+        </div>
+      </div>
+
+      <!-- Active Question Panel -->
+      <div class="practice-body">
+        <div class="practice-instructor">
+          <div class="instructor-avatar zara-avatar tiny"></div>
+          <div class="speech-bubble-horizontal" id="practiceZaraSpeech">Let's go! You're doing so great! 🌟</div>
+          <button class="btn-repeat-voice mini" id="btnRepeatPracticeVoice"><i class="fas fa-volume-high"></i></button>
+        </div>
+
+        <div class="question-canvas" id="questionCanvas">
+          <!-- Dynamic Question Layout Populated by Javascript -->
+        </div>
+      </div>
+
+      <!-- Footer / Actions -->
+      <div class="practice-footer">
+        <div class="attempts-tracker" id="attemptsTracker">
+          Attempts left: <span class="attempt-dot active"></span><span class="attempt-dot active"></span>
+        </div>
+        <button class="btn btn-secondary btn-hint" id="btnShowHint" disabled>
+          <i class="far fa-lightbulb"></i> Need a Hint?
+        </button>
+        <button class="btn btn-primary" id="btnSubmitAnswer" disabled>
+          Check Answer <i class="fas fa-check"></i>
+        </button>
+      </div>
+
+      <!-- Mini Hint Toast popup -->
+      <div class="hint-card-popup" id="hintPopup">
+        <div class="hint-content">
+          <i class="fas fa-comment-medical hint-icon"></i>
+          <span id="hintText">Think of place values! Compare Tens, then Ones.</span>
+        </div>
+        <button class="btn-close-hint" id="btnCloseHint">&times;</button>
+      </div>
+    </section>
+
+    <!-- 5. RESULTS & CERTIFICATE SCREEN -->
+    <section class="screen" id="screenResults">
+      <div class="results-layout">
+        <div class="results-card glass-card">
+          <div class="trophy-showcase animated tada">
+            <div class="sparkles-container"></div>
+            <i class="fas fa-trophy gold-trophy"></i>
+          </div>
+
+          <h2>Excellent Job, <span id="explorerNameText">Explorer</span>!</h2>
+          <p class="congrats-sub">You have successfully completed the NumberOrder Quest!</p>
+
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <span class="metric-num" id="finalStars">0</span>
+              <span class="metric-label">Stars Earned</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-num" id="finalSessions">1</span>
+              <span class="metric-label">Sessions Completed</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-num" id="finalAccuracy">0%</span>
+              <span class="metric-label">Best Score</span>
+            </div>
+          </div>
+
+          <!-- Badges Showcase -->
+          <div class="results-section">
+            <h3>Your Unlocked Badges</h3>
+            <div class="badges-flex" id="resultsBadgesFlex">
+              <!-- Dynamically populated badge elements -->
+            </div>
+          </div>
+
+          <div class="results-actions">
+            <button class="btn btn-primary" id="btnDownloadCertificate">
+              <i class="fas fa-certificate"></i> Print Certificate
+            </button>
+            <button class="btn btn-secondary" id="btnRestartQuest">
+              Play Again <i class="fas fa-undo"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- DIALOG / OVERLAYS -->
+  <!-- A. Pause / Exit Confirmation Dialogue -->
+  <div class="overlay-dialog" id="pauseDialog">
+    <div class="dialog-card">
+      <i class="fas fa-pause-circle dialog-icon"></i>
+      <h3>Quest Paused</h3>
+      <p>Your current progress is saved securely. What would you like to do?</p>
+      <div class="dialog-buttons">
+        <button class="btn btn-primary" id="btnResumePractice">Resume Challenge</button>
+        <button class="btn btn-secondary" id="btnExitToHub">Back to Journey Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- B. Feedback Modal for correct/incorrect answers in practice -->
+  <div class="feedback-modal-overlay" id="feedbackOverlay">
+    <div class="feedback-card" id="feedbackCard">
+      <div class="feedback-icon-container" id="feedbackIconContainer">
+        <!-- Renders check or cross anim -->
+      </div>
+      <h3 id="feedbackStatus">Correct!</h3>
+      <p class="feedback-explanation" id="feedbackExplanationText">Excellent work! You arranged the numbers ascendingly.
+      </p>
+      <button class="btn btn-primary" id="btnNextQuestion">
+        Next Question <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- C. Interactive Badge Unlock Announcement Dialog -->
+  <div class="badge-unlock-overlay" id="badgeUnlockOverlay">
+    <div class="badge-unlock-card">
+      <div class="badge-burst-ring"></div>
+      <div class="badge-icon-shield" id="unlockedBadgeIcon">🏆</div>
+      <h2 class="sparkling-text">Badge Unlocked!</h2>
+      <h3 id="unlockedBadgeTitle">Number Ninja</h3>
+      <p id="unlockedBadgeDesc">You successfully completed 10 questions in a row!</p>
+      <button class="btn btn-primary" id="btnCloseBadgeUnlock">Wow! Keep Going</button>
+    </div>
+  </div>
+
+  <!-- Core Javascript Game Engine -->
+  <script src="app.js"></script>
+</body>
+
+</html>
